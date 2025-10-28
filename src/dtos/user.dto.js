@@ -55,6 +55,16 @@ export const bodyToReview = (body, restaurantId) => {
   };
 }//리뷰 작성 요청 dto
 
+export const responseFromReview = ({ review }) => {
+  return {
+    restaurantId: review[0].restaurant_id,
+    restaurantName: review[0].name,
+    rate: review[0].rate,
+    reviewText: review[0].review_text,
+    createdAt: review[0].created_at,
+  };
+}//리뷰 작성 응답 dto
+
 export const bodyToMission = (body, restaurantId) => {
   return {
     restaurantId: restaurantId, //필수 
@@ -63,9 +73,28 @@ export const bodyToMission = (body, restaurantId) => {
   };
 }//미션 추가 요청 dto
 
+export const responseFromMission = ({ mission }) => {
+  return {
+    restaurantId: mission[0].restaurant_id,
+    restaurantName: mission[0].name,
+    minCost: mission[0].min_cost,
+    deadline: mission[0].deadline,
+    createdAt: mission[0].created_at,
+  };
+}//미션 추가 응답 dto
+
 export const bodyToUserMission = (body, missionId) => {
   return {
     userId: body.userId, //필수
     missionId: missionId, //필수
   };
 }//유저미션 추가 요청 dto
+
+export const responseFromUserMission = ({ userMission }) => {
+  return {
+    id: userMission[0].id,  
+    missionId: userMission[0].mission_id,
+    userId: userMission[0].user_id, 
+    startingDay: userMission[0].starting_day,
+  };
+}//유저미션 추가 응답 dto

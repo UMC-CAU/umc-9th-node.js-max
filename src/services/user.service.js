@@ -1,4 +1,4 @@
-import { responseFromUser, responseFromRestaurant } from "../dtos/user.dto.js";
+import { responseFromUser, responseFromRestaurant, responseFromReview, responseFromMission, responseFromUserMission } from "../dtos/user.dto.js";
 import {
   addUser,
   getUser,
@@ -77,7 +77,7 @@ export const reviewAdd = async (data) => {
 
   const review = getReview(addedReviewId);
 
-  return review;
+  return responseFromReview({review});
 };//리뷰 추가 로직
 
 export const missionAdd = async (data) => {
@@ -91,7 +91,7 @@ export const missionAdd = async (data) => {
 
   const mission = getMission(missionId);
 
-  return mission;
+  return responseFromMission({mission});
 };//미션 추가 로직
 
 export const userMissionAdd = async (data) => {
@@ -105,5 +105,5 @@ export const userMissionAdd = async (data) => {
   console.log("userMissionId:", userMissionId);
   const userMission = getUserMission(userMissionId);
 
-  return userMission;
+  return responseFromUserMission({userMission});
 };//유저미션 추가 로직
