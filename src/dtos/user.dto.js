@@ -3,13 +3,14 @@ export const bodyToUser = (body) => {
 
   return {
     email: body.email, //필수 
+    password: body.password, //필수
     name: body.name, // 필수
     gender: body.gender, // 필수
     birth, // 필수
     address: body.address || "", //선택 
     detailAddress: body.detailAddress || "", //선택 
     phoneNumber: body.phoneNumber,//필수
-    preferences: body.preferences,// 필수 
+    preferences: body.preferences// 필수 
   };
 };//회원가입 요청 dto
 
@@ -23,7 +24,7 @@ export const responseFromUser = ({ user, preferences }) => {
     address: user[0].address,
     detailAddress: user[0].detailAddress,
     phoneNumber: user[0].phone_number,
-    preferences: preferences.map((pref) => pref.category),
+    preferences: preferences.map((pref) => pref.food_category),
   };
 }//회원가입 응답 dto
 

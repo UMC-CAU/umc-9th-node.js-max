@@ -17,11 +17,18 @@ import {
   addUserMission,
   getUserMission
 } from "../repositories/user.repository.js";
+import bcrypt from "bcrypt";
 
 export const userSignUp = async (data) => {
+
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(data.password, saltRounds);
+  data.password = hashedPassword;
+
   const joinUserId = await addUser({
     email: data.email,
     name: data.name,
+    password: data.password,
     gender: data.gender,
     birth: data.birth,
     address: data.address,
@@ -32,11 +39,10 @@ export const userSignUp = async (data) => {
   if (joinUserId === null) {
     throw new Error("이미 존재하는 이메일입니다.");
   }
-
+  
   for (const preference of data.preferences) {
     await setPreference(joinUserId, preference);
   }
-
   const user = await getUser(joinUserId);
   const preferences = await getUserPreferencesByUserId(joinUserId);
 
