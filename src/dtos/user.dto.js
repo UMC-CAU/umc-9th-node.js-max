@@ -6,7 +6,7 @@ export const bodyToUser = (body) => {
     password: body.password, //필수
     name: body.name, // 필수
     gender: body.gender, // 필수
-    birth: body.birth, // 필수
+    birth: birth, // 필수
     address: body.address || "", //선택 
     detailAddress: body.detailAddress || "", //선택 
     phoneNumber: body.phoneNumber,//필수
