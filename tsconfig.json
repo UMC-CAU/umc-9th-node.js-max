@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    // 파일 구조
+    "rootDir": "./src",
+
+    // 실행 환경
+    "target": "ES2020",
+    "module": "ES2020",
+    "moduleResolution": "node",
+    "lib": ["ES2020"],
+    "types": ["node"],
+
+    // 컴파일 결과
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "strict": true,
+    "skipLibCheck": true,
+
+    "noImplicitAny": false
+
+  },
+  "include": ["src"]
+}
