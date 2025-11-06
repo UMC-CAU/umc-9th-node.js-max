@@ -13,7 +13,12 @@ import {
   reviewAdd,
   missionAdd,
   userMissionAdd,
+  listStoreReviews,
+  listMyReviews,
+  listRestaurantMissions,
+  listMyMissions,
 } from "../services/user.service.js";
+import {missionComplete} from "../repositories/user.repository.js"
 
 export const handleUserSignUp = async (
   req: Request,
@@ -81,6 +86,64 @@ export const handleUserMissionAdd = async (
   const userMission: any = await userMissionAdd(
     bodyToUserMission(req.body, req.params.missionId)
   );
-  res.status(StatusCodes.OK).json({ result: userMission });
+  res.status(StatusCodes.OK).json(userMission);
 };
 
+export const handleListStoreReviews = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const reviews = await listStoreReviews(
+    parseInt(req.params.storeId),
+    typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
+  );
+  res.status(StatusCodes.OK).json(reviews);
+};
+
+export const handleListMyReviews = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const reviews = await listMyReviews(
+    parseInt(req.params.userId)
+  );
+  res.status(StatusCodes.OK).json(reviews);
+};//내가 작성한 리뷰 목록 핸들러
+
+export const handleListRestaurantMissions = async(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const reviews = await listRestaurantMissions(
+    parseInt(req.params.restaurantId)
+  );
+  res.status(StatusCodes.OK).json(reviews);
+}//특정 가게 미션 목록 핸들러
+
+export const handleListMyMissions = async(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const missions = await listMyMissions(
+    parseInt(req.params.userId)
+  );
+  res.status(StatusCodes.OK).json(missions);
+}
+
+export const handleUserMissionComplete = async(
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  const completion:boolean = await missionComplete(req.body.userMissionId);
+  if(completion){
+    res.status(StatusCodes.OK).json("완료");
+  } else {
+    res.status(StatusCodes.BAD_REQUEST).json("실패");
+  }
+
+}

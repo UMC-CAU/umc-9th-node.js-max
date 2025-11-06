@@ -1,5 +1,5 @@
-import { responseFromUser, responseFromRestaurant, responseFromReview, responseFromMission, responseFromUserMission, } from "../dtos/user.dto.js";
-import { addUser, getUser, getUserPreferencesByUserId, setPreference, addRestaurant, getRestaurant, addReview, getReview, addMission, getMission, addUserMission, getUserMission, } from "../repositories/user.repository.js";
+import { responseFromUser, responseFromRestaurant, responseFromReview, responseFromMission, responseFromUserMission, responseFromReviews, responseFromMissions } from "../dtos/user.dto.js";
+import { addUser, getUser, getUserPreferencesByUserId, setPreference, addRestaurant, getRestaurant, addReview, getReview, addMission, getMission, addUserMission, getUserMission, getAllStoreReviews, getMyReviews, getRestaurantMissions, getUserMissions, } from "../repositories/user.repository.js";
 import bcrypt from "bcrypt";
 // 회원가입 로직
 export const userSignUp = async (data) => {
@@ -51,10 +51,9 @@ export const reviewAdd = async (data) => {
         userId: data.userId,
         rate: data.rate,
         reviewText: data.reviewText,
-        image: data.image || "",
     });
-    console.log("addedReviewId:", addedReviewId);
     const review = await getReview(addedReviewId);
+    console.log(review);
     return responseFromReview({ review });
 };
 // 미션 추가 로직
@@ -79,5 +78,23 @@ export const userMissionAdd = async (data) => {
     }
     console.log("userMissionId:", userMissionId);
     const userMission = await getUserMission(userMissionId);
+    console.log(userMission);
     return responseFromUserMission({ userMission });
+};
+//리뷰 리스트 선택 로직
+export const listStoreReviews = async (storeId, cursor) => {
+    const reviews = await getAllStoreReviews(storeId);
+    return responseFromReviews(reviews);
+};
+export const listMyReviews = async (userId) => {
+    const reviews = await getMyReviews(userId);
+    return responseFromReviews(reviews); //responseFromReviews 재사용
+}; //내가 작성한 리뷰 리스트 선택 로직
+export const listRestaurantMissions = async (restaurantId) => {
+    const missions = await getRestaurantMissions(restaurantId);
+    return responseFromMissions(missions);
+};
+export const listMyMissions = async (userId) => {
+    const missions = await getUserMissions(userId);
+    return responseFromMissions(missions);
 };

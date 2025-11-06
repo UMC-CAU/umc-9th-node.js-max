@@ -4,6 +4,8 @@ import {
   responseFromReview,
   responseFromMission,
   responseFromUserMission,
+  responseFromReviews,
+  responseFromMissions
 } from "../dtos/user.dto.js";
 
 import {
@@ -23,6 +25,11 @@ import {
 
   addUserMission,
   getUserMission,
+
+  getAllStoreReviews,
+  getMyReviews,
+  getRestaurantMissions,
+  getUserMissions,
 } from "../repositories/user.repository.js";
 
 import bcrypt from "bcrypt";
@@ -97,7 +104,6 @@ export const userSignUp = async (data: UserSignUpData): Promise<any> => {
 
   const user = await getUser(joinUserId);
   const preferences = await getUserPreferencesByUserId(joinUserId);
-
   return responseFromUser({ user, preferences });
 };
 
@@ -132,13 +138,10 @@ export const reviewAdd = async (data: ReviewData): Promise<any> => {
     userId: data.userId,
     rate: data.rate,
     reviewText: data.reviewText,
-    image: data.image || "",
   });
 
-  console.log("addedReviewId:", addedReviewId);
-
   const review = await getReview(addedReviewId);
-
+  console.log(review);
   return responseFromReview({ review });
 };
 
@@ -171,6 +174,27 @@ export const userMissionAdd = async (data: UserMissionData): Promise<any> => {
   console.log("userMissionId:", userMissionId);
 
   const userMission = await getUserMission(userMissionId);
-
+  console.log(userMission);
   return responseFromUserMission({ userMission });
 };
+
+//리뷰 리스트 선택 로직
+export const listStoreReviews = async (storeId, cursor) => {
+  const reviews = await getAllStoreReviews(storeId);
+  return responseFromReviews(reviews);
+};
+
+export const listMyReviews = async (userId: number) => {
+  const reviews = await getMyReviews(userId);
+  return responseFromReviews(reviews);//responseFromReviews 재사용
+}//내가 작성한 리뷰 리스트 선택 로직
+
+export const listRestaurantMissions = async (restaurantId: number) => {
+  const missions = await getRestaurantMissions(restaurantId);
+  return responseFromMissions(missions);
+}
+
+export const listMyMissions = async (userId: number) => {
+  const missions = await getUserMissions(userId);
+  return responseFromMissions(missions);
+}

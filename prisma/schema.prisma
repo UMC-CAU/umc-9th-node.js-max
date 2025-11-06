@@ -1,0 +1,127 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id            Int      @id @default(autoincrement())
+  email         String   @unique(map: "email") @db.VarChar(255)
+  password      String   @map("password") @db.VarChar(255)
+  name          String   @db.VarChar(50)
+  gender        String   @db.VarChar(10)
+  birth         DateTime @db.Date
+  address       String   @db.VarChar(70)
+  detailAddress String?  @map("detail_address") @db.VarChar(100)
+  phoneNumber   String   @map("phone_number") @db.VarChar(30)
+  createdAt     DateTime? @map("created_at") // ❗ 사용 안함 → 선택
+  updatedAt     DateTime? @map("updated_at") // ❗ 사용 안함 → 선택
+  signupDate    DateTime? @map("signup_date") // ❗ 사용 안함 → 선택
+
+
+  userFavorCategories UserFavorCategory[]  
+  reviews             Review[]
+  userMissions        UserMission[]
+
+  @@map("user")
+}
+
+model FoodCategory {
+  id   Int    @id @default(autoincrement())
+  name String @map("food_category") @db.VarChar(10)
+
+  userFavorCategories UserFavorCategory[]
+  restaurants         Restaurant[]
+
+  @@map("food_category")
+}
+
+model UserFavorCategory {
+  user           User         @relation(fields: [userId], references: [id])
+  userId         Int          @map("user_id")
+  foodCategory   FoodCategory @relation(fields: [foodCategoryId], references: [id])
+  foodCategoryId Int          @map("food_id")
+
+  @@id([userId, foodCategoryId])
+  @@index([foodCategoryId], map: "food_id")
+  @@index([userId], map: "user_id")
+  @@map("prefer")
+}
+
+model Region {
+  id   Int    @id @default(autoincrement())
+  region String @db.VarChar(50)
+
+  restaurants Restaurant[]
+
+  @@map("region")
+}
+
+model Restaurant {
+  id             Int    @id @default(autoincrement())
+  name           String @db.VarChar(50)
+  address        String @db.VarChar(255)
+  foodCategoryId Int    @map("food_category_id")
+  regionId       Int    @map("region_id")
+
+  foodCategory FoodCategory @relation(fields: [foodCategoryId], references: [id])
+  region       Region       @relation(fields: [regionId], references: [id])
+  reviews      Review[]
+  missions     Mission[]
+
+  @@map("restaurant")
+}
+
+model Review {
+  id           Int      @id @default(autoincrement())
+  restaurantId Int      @map("restaurant_id")
+  userId       Int      @map("user_id")
+  rate         Int
+  reviewText   String   @map("review_text") @db.Text
+  image        String?  @map("image_filepath") @db.VarChar(255)
+  createdAt    DateTime? @map("created_at")
+  updatedAt    DateTime? @map("updated_at")
+
+  user       User       @relation(fields: [userId], references: [id])
+  restaurant Restaurant @relation(fields: [restaurantId], references: [id])
+
+  @@map("review")
+}
+
+model Mission {
+  id           Int      @id @default(autoincrement())
+  restaurantId Int      @map("restaurant_id")
+  minCost      Int      @map("min_cost")
+  deadline     DateTime
+  createdAt    DateTime? @map("created_at") // ❗ 사용 안함 → 선택
+  updatedAt    DateTime? @map("updated_at")
+  reward       Int?     // ❗ 사용 안함 → 선택
+
+  restaurant   Restaurant   @relation(fields: [restaurantId], references: [id])
+  userMissions UserMission[]
+
+  @@map("mission")
+}
+
+model UserMission {
+  id          Int      @id @default(autoincrement())
+  missionId   Int      @map("mission_id")
+  userId      Int      @map("user_id")
+  isClear     Boolean  @map("completion") // ❗ DB에서는 completion으로 저장됨
+  startingDay DateTime @map("starting_day")
+
+  user    User    @relation(fields: [userId], references: [id])
+  mission Mission @relation(fields: [missionId], references: [id])
+
+  @@map("user_mission")
+}
+
