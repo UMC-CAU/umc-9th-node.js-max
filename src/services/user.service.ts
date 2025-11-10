@@ -8,6 +8,13 @@ import {
   responseFromMissions
 } from "../dtos/user.dto.js";
 
+import { 
+  DuplicateUserEmailError,
+  RestaurantAddError,
+  RestaurantNotFoundError,
+  DuplicateMissionError
+} from "../errors.js";
+
 import {
   addUser,
   getUser,
@@ -95,7 +102,7 @@ export const userSignUp = async (data: UserSignUpData): Promise<any> => {
   });
 
   if (joinUserId === null) {
-    throw new Error("이미 존재하는 이메일입니다.");
+    throw new DuplicateUserEmailError("이미 존재하는 이메일입니다.", data);
   }
 
   for (const preference of data.preferences) {
@@ -117,7 +124,7 @@ export const restaurantAdd = async (data: RestaurantData): Promise<any> => {
   });
 
   if (addedRestaurantId === null) {
-    throw new Error("음식점 추가에 실패했습니다.");
+    throw new RestaurantAddError("음식점 추가에 실패했습니다.", data);
   }
 
   const restaurant = await getRestaurant(addedRestaurantId);
@@ -130,7 +137,7 @@ export const reviewAdd = async (data: ReviewData): Promise<any> => {
   const restaurant = await getRestaurant(data.restaurantId); //음식점 존재 여부 확인
 
   if (restaurant === null) {
-    throw new Error("존재하지 않는 음식점입니다.");
+    throw new RestaurantNotFoundError("존재하지 않는 음식점입니다.", data);
   }
 
   const addedReviewId = await addReview({
@@ -168,7 +175,7 @@ export const userMissionAdd = async (data: UserMissionData): Promise<any> => {
   });
 
   if (userMissionId === null) {
-    return console.log("이미 추가한 미션입니다.");
+    return new DuplicateMissionError("이미 추가한 미션입니다.", data);
   }
 
   console.log("userMissionId:", userMissionId);

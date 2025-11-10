@@ -1,4 +1,5 @@
 import { responseFromUser, responseFromRestaurant, responseFromReview, responseFromMission, responseFromUserMission, responseFromReviews, responseFromMissions } from "../dtos/user.dto.js";
+import { DuplicateUserEmailError } from "../errors.js";
 import { addUser, getUser, getUserPreferencesByUserId, setPreference, addRestaurant, getRestaurant, addReview, getReview, addMission, getMission, addUserMission, getUserMission, getAllStoreReviews, getMyReviews, getRestaurantMissions, getUserMissions, } from "../repositories/user.repository.js";
 import bcrypt from "bcrypt";
 // 회원가입 로직
@@ -17,7 +18,7 @@ export const userSignUp = async (data) => {
         phoneNumber: data.phoneNumber,
     });
     if (joinUserId === null) {
-        throw new Error("이미 존재하는 이메일입니다.");
+        throw new DuplicateUserEmailError("이미 존재하는 이메일입니다.", data);
     }
     for (const preference of data.preferences) {
         await setPreference(joinUserId, preference);

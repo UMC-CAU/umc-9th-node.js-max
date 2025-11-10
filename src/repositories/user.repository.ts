@@ -238,7 +238,7 @@ export const getAllStoreReviews = async (
   });
 
   return reviews;
-};
+};//특정 가게 리뷰 얻기
 
 export const getMyReviews = async (userId: number): Promise<any[]> => {
   const reviews = await prisma.review.findMany({
@@ -273,7 +273,7 @@ export const getRestaurantMissions = async (
     orderBy: { id: "asc" },
   });
   return missions;
-};
+};//특정 가게 미션 목록 선택
 
 export const getUserMissions = async (userId: number): Promise<any[]> => {
   const userMission = await prisma.userMission.findMany({

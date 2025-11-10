@@ -29,7 +29,8 @@ export const handleUserSignUp = async (
   console.log("body:", req.body);
 
   const user: any = await userSignUp(bodyToUser(req.body));
-  res.status(StatusCodes.OK).json({ result: user });
+  console.log("user:", user);
+  res.status(StatusCodes.OK).success(user);
 };
 
 export const handleRestaurantAdd = async (
@@ -41,7 +42,7 @@ export const handleRestaurantAdd = async (
   console.log("body:", req.body);
 
   const restaurant: any = await restaurantAdd(bodyToRestaurant(req.body));
-  res.status(StatusCodes.OK).json({ result: restaurant });
+  res.status(StatusCodes.OK).success(restaurant);
 };
 
 export const handleReviewAdd = async (
@@ -56,7 +57,7 @@ export const handleReviewAdd = async (
   const review: any = await reviewAdd(
     bodyToReview(req.body, req.params.restaurantId)
   );
-  res.status(StatusCodes.OK).json({ result: review });
+  res.status(StatusCodes.OK).success(review);
 };
 
 export const handleMissionAdd = async (
@@ -71,7 +72,7 @@ export const handleMissionAdd = async (
   const mission: any = await missionAdd(
     bodyToMission(req.body, req.params.restaurantId)
   );
-  res.status(StatusCodes.OK).json({ result: mission });
+  res.status(StatusCodes.OK).success(mission);
 };
 
 export const handleUserMissionAdd = async (
@@ -86,7 +87,7 @@ export const handleUserMissionAdd = async (
   const userMission: any = await userMissionAdd(
     bodyToUserMission(req.body, req.params.missionId)
   );
-  res.status(StatusCodes.OK).json(userMission);
+  res.status(StatusCodes.OK).success(userMission);
 };
 
 export const handleListStoreReviews = async (
@@ -98,7 +99,7 @@ export const handleListStoreReviews = async (
     parseInt(req.params.storeId),
     typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0
   );
-  res.status(StatusCodes.OK).json(reviews);
+  res.status(StatusCodes.OK).success(reviews);
 };
 
 export const handleListMyReviews = async (
@@ -109,7 +110,7 @@ export const handleListMyReviews = async (
   const reviews = await listMyReviews(
     parseInt(req.params.userId)
   );
-  res.status(StatusCodes.OK).json(reviews);
+  res.status(StatusCodes.OK).success(reviews);
 };//내가 작성한 리뷰 목록 핸들러
 
 export const handleListRestaurantMissions = async(
@@ -120,7 +121,7 @@ export const handleListRestaurantMissions = async(
   const reviews = await listRestaurantMissions(
     parseInt(req.params.restaurantId)
   );
-  res.status(StatusCodes.OK).json(reviews);
+  res.status(StatusCodes.OK).success(reviews);
 }//특정 가게 미션 목록 핸들러
 
 export const handleListMyMissions = async(
@@ -131,7 +132,7 @@ export const handleListMyMissions = async(
   const missions = await listMyMissions(
     parseInt(req.params.userId)
   );
-  res.status(StatusCodes.OK).json(missions);
+  res.status(StatusCodes.OK).success(missions);
 }
 
 export const handleUserMissionComplete = async(
@@ -141,9 +142,13 @@ export const handleUserMissionComplete = async(
 ) => {
   const completion:boolean = await missionComplete(req.body.userMissionId);
   if(completion){
-    res.status(StatusCodes.OK).json("완료");
+    res.status(StatusCodes.OK).success("완료");
   } else {
-    res.status(StatusCodes.BAD_REQUEST).json("실패");
+    res.status(StatusCodes.BAD_REQUEST).error({
+      errorCode: "U002",//임의로 정한 코드
+      reason: "미션완료 실패",
+      data: null
+    });
   }
 
 }
