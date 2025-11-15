@@ -2,6 +2,7 @@
   "compilerOptions": {
     // 파일 구조
     "rootDir": "./src",
+    "outDir": "./dist",
 
     // 실행 환경
     "target": "ES2020",

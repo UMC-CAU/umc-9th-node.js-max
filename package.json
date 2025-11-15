@@ -5,11 +5,11 @@
   "description": "UMC테스트 프로젝트",
   "license": "ISC",
   "author": "",
-  "main": "index.js",
+  "main": "/dist/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node src/index.js",
-    "dev": "nodemon -e js,json,prisma --exec \"prisma generate && node src/index.js\""
+    "start": "node dist/index.js",
+    "dev": "nodemon -e js,json,prisma --exec \"prisma generate && node dist/index.js\""
   },
   "dependencies": {
     "@prisma/client": "^6.18.0",
