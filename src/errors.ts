@@ -1,7 +1,10 @@
+
 export class DuplicateUserEmailError extends Error {
   errorCode = "U001";
+  reason: string;
+  data: any;
 
-  constructor(reason, data) {
+  constructor(reason: string, data: any) {
     super(reason);
     this.reason = reason;
     this.data = data;
@@ -10,8 +13,10 @@ export class DuplicateUserEmailError extends Error {
 
 export class RestaurantAddError extends Error {
   errorCode = "R001";
+  reason: string;
+  data: any;
 
-  constructor(reason, data) {
+  constructor(reason: string, data: any) {
     super(reason);
     this.reason = reason;
     this.data = data;
@@ -20,7 +25,10 @@ export class RestaurantAddError extends Error {
 
 export class RestaurantNotFoundError extends Error {
   errorCode = "R002";
-  constructor(reason, data) {
+  reason: string;
+  data: any;
+
+  constructor(reason: string, data: any) {
     super(reason);
     this.reason = reason;
     this.data = data;
@@ -28,9 +36,11 @@ export class RestaurantNotFoundError extends Error {
 }
 
 export class DuplicateMissionError extends Error {
-  errorCode = "M001";
+  errorCode = "M001"; 
+  reason: string;
+  data: any;
 
-  constructor(reason, data) {
+  constructor(reason: string, data: any) {
     super(reason);
     this.reason = reason;
     this.data = data;

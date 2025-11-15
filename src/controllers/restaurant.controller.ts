@@ -7,7 +7,8 @@ import {
   reviewAdd
 } from "../services/restaurant.service.js";
 
-import { bodyToRestaurant } from "../dtos/restaurant.dto.js";
+import { bodyToRestaurant, bodyToReview} from "../dtos/restaurant.dto.js";
+
 
 export const handleListStoreReviews = async (
   req: Request,

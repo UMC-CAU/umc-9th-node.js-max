@@ -1,6 +1,6 @@
 import { StatusCodes } from "http-status-codes";
 import { listStoreReviews, listRestaurantMissions, restaurantAdd, reviewAdd } from "../services/restaurant.service.js";
-import { bodyToRestaurant } from "../dtos/restaurant.dto.js";
+import { bodyToRestaurant, bodyToReview } from "../dtos/restaurant.dto.js";
 export const handleListStoreReviews = async (req, res, next) => {
     const reviews = await listStoreReviews(parseInt(req.params.storeId), typeof req.query.cursor === "string" ? parseInt(req.query.cursor) : 0);
     res.status(StatusCodes.OK).success(reviews);

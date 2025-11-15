@@ -68,26 +68,5 @@ export const responseFromUser = ({
   };
 };
 
-export interface ReviewRequestBody {
-  userId: number;
-  rate: number;
-  reviewText: string;
-  image?: string;
-}
-
-export const bodyToReview = (
-  body: ReviewRequestBody,
-  restaurantId: string | number
-) => {
-  return {
-    restaurantId:
-      typeof restaurantId === "string" ? parseInt(restaurantId) : restaurantId, //필수
-    userId: body.userId, //필수
-    rate: body.rate, //필수
-    reviewText: body.reviewText, //필수
-    image: body.image || "", //선택
-  };
-};
-
 
 

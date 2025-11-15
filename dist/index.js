@@ -12,9 +12,6 @@ dotenv.config();
 const upload = multer({ dest: "uploads/" }); //이미지 업로드를 위한 multer 설정
 const app = express();
 const port = process.env.PORT;
-/**
- * 공통 응답을 사용할 수 있는 헬퍼 함수 등록
- */
 app.use((req, res, next) => {
     res.success = (success) => {
         return res.json({ resultType: "SUCCESS", error: null, success });

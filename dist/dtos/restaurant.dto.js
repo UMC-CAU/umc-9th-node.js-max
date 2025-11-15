@@ -36,3 +36,12 @@ export const responseFromReview = ({ review }) => {
         reviewText: review.reviewText,
     };
 };
+export const bodyToReview = (body, restaurantId) => {
+    return {
+        restaurantId: typeof restaurantId === "string" ? parseInt(restaurantId) : restaurantId, //필수
+        userId: body.userId, //필수
+        rate: body.rate, //필수
+        reviewText: body.reviewText, //필수
+        image: body.image || "", //선택
+    };
+};
