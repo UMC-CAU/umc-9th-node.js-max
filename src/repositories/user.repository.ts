@@ -63,7 +63,7 @@ export const missionComplete = async (
   userMissionId: number
 ): Promise<boolean> => {
   try {
-    const userMission = await prisma.userMission.update({
+    await prisma.userMission.update({
       where: { id: userMissionId },
       data: { isClear: true },
     });

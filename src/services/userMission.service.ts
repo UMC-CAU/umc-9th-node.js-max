@@ -19,7 +19,7 @@ export const userMissionAdd = async (data: UserMissionData): Promise<any> => {
   });
 
   if (userMissionId === null) {
-    return new DuplicateMissionError("이미 추가한 미션입니다.", data);
+    throw new DuplicateMissionError("이미 추가한 미션입니다.", data);
   }
 
   console.log("userMissionId:", userMissionId);

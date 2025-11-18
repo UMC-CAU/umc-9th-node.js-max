@@ -4,11 +4,10 @@ import {
   listStoreReviews,
   listRestaurantMissions,
   restaurantAdd,
-  reviewAdd
+  reviewAdd,
 } from "../services/restaurant.service.js";
 
-import { bodyToRestaurant, bodyToReview} from "../dtos/restaurant.dto.js";
-
+import { bodyToRestaurant, bodyToReview } from "../dtos/restaurant.dto.js";
 
 export const handleListStoreReviews = async (
   req: Request,
@@ -106,6 +105,7 @@ export const handleListRestaurantMissions = async (
                     items: {
                       type: "object",
                       properties: {
+                        id: { type: "number" },
                         restaurantId: { type: "number" },
                         restaurant: { type: "object", properties: { name: { type: "string" } } },
                         minCost: { type: "number" },

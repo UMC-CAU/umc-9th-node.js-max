@@ -182,6 +182,7 @@ export const handleListMyMissions = async (
                     items: {
                       type: "object",
                       properties: {
+                        id: { type: "number" },
                         restaurantId: { type: "number" },
                         restaurant: { type: "object", properties: { name: { type: "string" } } },
                         minCost: { type: "number" },
