@@ -1,0 +1,33 @@
+{
+  "name": "yanode-week3",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "UMC테스트 프로젝트",
+  "license": "ISC",
+  "author": "",
+  "main": "/dist/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node dist/index.js",
+    "dev": "nodemon -e js,json,prisma --exec \"prisma generate && node dist/index.js\""
+  },
+  "dependencies": {
+    "@prisma/client": "^6.18.0",
+    "bcrypt": "^6.0.0",
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
+    "dotenv": "^17.2.3",
+    "express": "^5.0.0",
+    "http-status-codes": "^2.3.0",
+    "morgan": "^1.10.1",
+    "multer": "^2.0.2",
+    "mysql2": "^3.15.3"
+  },
+  "devDependencies": {
+    "@types/express": "^5.0.5",
+    "@types/node": "^24.10.0",
+    "nodemon": "^3.1.10",
+    "prisma": "^6.18.0",
+    "ts-node": "^10.9.2"
+  }
+}
