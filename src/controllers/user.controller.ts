@@ -5,8 +5,10 @@ import {
   userSignUp,
   listMyReviews,
   listMyMissions,
+  updateUserInfoService,
 } from "../services/user.service.js";
-import { missionComplete } from "../repositories/user.repository.js";
+import { getUser, missionComplete } from "../repositories/user.repository.js";
+import { getUnpackedSettings } from "http2";
 
 export const handleUserSignUp = async (
   req: Request,
@@ -272,3 +274,80 @@ export const handleUserMissionComplete = async (
     });
   }
 };
+
+export const updateUserInfo = async (
+  req: Request,
+  res: Response,
+  next: NextFunction
+) => {
+  /*
+    #swagger.summary = '사용자 정보 수정 API';
+    #swagger.parameters['userId'] = {
+      in: 'path',
+      description: '사용자 ID',
+      required: true,
+      type: 'integer'
+    };
+    #swagger.requestBody = {
+      required: true,
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              email: { type: "string", example: "user@example.com" },
+              password: { type: "string", example: "password123" },
+              name: { type: "string", example: "홍길동" },
+              gender: { type: "string", example: "male" },
+              birth: { type: "string", format: "date", example: "1990-01-01" },
+              address: { type: "string", example: "서울시 강남구" },
+              detailAddress: { type: "string", example: "101동 101호" },
+              phoneNumber: { type: "string", example: "010-1234-5678" },
+              preferences: { 
+                type: "array", 
+                items: { type: "integer" },
+                example: [1, 2, 3],
+                description: "음식 카테고리 ID 배열"
+              }
+            }
+          }
+        }
+      }
+    };
+    #swagger.responses[200] = {
+      description: '사용자 정보 수정 성공',
+      content: {
+        "application/json": {
+          schema: {
+            type: "object",
+            properties: {
+              resultType: { type: "string", example: "SUCCESS" },
+              error: { type: "object", nullable: true, example: null },
+              success: {
+                type: "object",
+                properties: { 
+                  id: { type: "number", example: 1 },
+                  email: { type: "string", example: "user@example.com" },
+                  name: { type: "string", example: "홍길동" }, 
+                  gender: { type: "string", example: "male" },
+                  birth: { type: "string", format: "date-time", example: "1990-01-01T00:00:00.000Z" },
+                  address: { type: "string", example: "서울시 강남구" },
+                  detailAddress: { type: "string", example: "101동 101호" },
+                  phoneNumber: { type: "string", example: "010-1234-5678" },
+                  preferences: {
+                    type: "array",
+                    items: { type: "string" },
+                    example: ["한식", "중식", "일식"]
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    };
+  */
+  const userId = await updateUserInfoService(bodyToUser(req.body), parseInt(req.params.userId));
+  const user = await getUser(userId);
+  res.status(StatusCodes.OK).success(user);
+}
