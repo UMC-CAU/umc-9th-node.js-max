@@ -37,7 +37,7 @@ export const getUserPreferencesByUserId = async (userId) => {
 };
 export const missionComplete = async (userMissionId) => {
     try {
-        const userMission = await prisma.userMission.update({
+        await prisma.userMission.update({
             where: { id: userMissionId },
             data: { isClear: true },
         });
@@ -47,4 +47,20 @@ export const missionComplete = async (userMissionId) => {
         console.error("업데이트 실패:", error);
         return false;
     }
+};
+export const updateUserInfo = async (userInfo, userId) => {
+    const updated = await prisma.user.update({
+        where: { id: userId },
+        data: {
+            email: userInfo.email,
+            name: userInfo.name,
+            password: userInfo.password,
+            gender: userInfo.gender,
+            birth: userInfo.birth,
+            address: userInfo.address,
+            detailAddress: userInfo.detailAddress,
+            phoneNumber: userInfo.phoneNumber,
+        },
+    });
+    return updated.id;
 };

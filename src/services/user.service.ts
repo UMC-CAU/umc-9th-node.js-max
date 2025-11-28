@@ -9,6 +9,7 @@ import {
 
 import {
   DuplicateUserEmailError,
+  UserUpdateFailedError,
 } from "../errors.js";
 
 import {
@@ -16,6 +17,7 @@ import {
   getUser,
   getUserPreferencesByUserId,
   setPreference,
+  updateUserInfo
 } from "../repositories/user.repository.js";
 
 import { getUserMissions } from "../repositories/userMission.repository.js";
@@ -75,4 +77,23 @@ export const listMyReviews = async (userId: number) => {
 export const listMyMissions = async (userId: number) => {
   const missions = await getUserMissions(userId);
   return responseFromMissions(missions);
+};
+
+export const updateUserInfoService = async (
+  userInfo: UserSignUpData,
+  userId: number
+): Promise<number | null> => {
+  const user = await getUser(userId);
+  if (!user) {
+    throw new Error("User not found");
+  }
+  const saltRounds = 10;
+  const hashedPassword = await bcrypt.hash(userInfo.password, saltRounds);
+  userInfo.password = hashedPassword;
+  user.password = user.password;
+  const updatedUserId = await updateUserInfo(userInfo, userId);
+  if (updatedUserId === null) {
+    throw new UserUpdateFailedError("업데이트에 실패했습니다.", userInfo);
+  }
+  return updatedUserId;
 };

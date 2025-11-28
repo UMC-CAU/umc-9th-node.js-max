@@ -30,3 +30,11 @@ export class DuplicateMissionError extends Error {
         this.data = data;
     }
 }
+export class UserUpdateFailedError extends Error {
+    constructor(reason, data) {
+        super(reason);
+        this.errorCode = "U002";
+        this.reason = reason;
+        this.data = data;
+    }
+}

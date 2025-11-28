@@ -73,3 +73,23 @@ export const missionComplete = async (
     return false;
   }
 };
+
+export const updateUserInfo = async (
+  userInfo: AddUserData,
+  userId: number
+):Promise<number>  => {
+  const updated = await prisma.user.update({
+    where: { id: userId },
+    data: {
+      email: userInfo.email,
+      name: userInfo.name,
+      password: userInfo.password,
+      gender: userInfo.gender,
+      birth: userInfo.birth,
+      address: userInfo.address,
+      detailAddress: userInfo.detailAddress,
+      phoneNumber: userInfo.phoneNumber,
+    },
+  });
+  return updated.id;
+};
