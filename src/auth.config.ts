@@ -60,7 +60,6 @@ export const googleStrategy = new GoogleStrategy(
     callbackURL: "/oauth2/callback/google", 
     scope: ["email", "profile"],
   },
-  
 
   async (accessToken, refreshToken, profile, cb) => {
     try {
@@ -70,8 +69,6 @@ export const googleStrategy = new GoogleStrategy(
       const jwtAccessToken = generateAccessToken(user);
       const jwtRefreshToken = generateRefreshToken(user);
 
-
-     
       return cb(null, {
         accessToken: jwtAccessToken,
         refreshToken: jwtRefreshToken,
