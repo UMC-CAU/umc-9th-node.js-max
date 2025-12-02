@@ -8,7 +8,7 @@ export const userMissionAdd = async (data) => {
         userId: data.userId,
     });
     if (userMissionId === null) {
-        return new DuplicateMissionError("이미 추가한 미션입니다.", data);
+        throw new DuplicateMissionError("이미 추가한 미션입니다.", data);
     }
     console.log("userMissionId:", userMissionId);
     const userMission = await getUserMission(userMissionId);

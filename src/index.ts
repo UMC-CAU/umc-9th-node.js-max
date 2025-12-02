@@ -10,6 +10,7 @@ import {
   handleListMyReviews,
   handleListMyMissions,
   handleUserMissionComplete,
+  updateUserInfo
 } from "./controllers/user.controller.js";
 
 import {
@@ -28,7 +29,15 @@ import { handleUserMissionAdd } from "./controllers/userMission.controller.js";
 import swaggerAutogen from "swagger-autogen";
 import swaggerUiExpress from "swagger-ui-express";
 
+import passport from "passport";
+import { googleStrategy, jwtStrategy } from "./auth.config.js";
+import { User } from "./generated/prisma/wasm.js";
+
 dotenv.config();
+
+passport.use("google", googleStrategy);
+passport.use("jwt", jwtStrategy);
+
 const upload = multer({ dest: "uploads/" }); //이미지 업로드를 위한 multer 설정
 
 const app = express();
@@ -66,6 +75,7 @@ app.use(express.json()); // request의 본문을 json으로 해석할 수 있도
 app.use(express.urlencoded({ extended: false })); // 단순 객체 문자열 형태로 본문 데이터 해석
 app.use(morgan("dev")); // HTTP 요청 로깅
 app.use(cookieParser()); //쿠키 파싱 미들웨어
+app.use(passport.initialize()); //Passport 초기화
 
 app.use(
   "/docs",
@@ -75,6 +85,48 @@ app.use(
       url: "/openapi.json",
     },
   })
+);
+
+const isLogin = passport.authenticate('jwt', { session: false });
+
+declare global {
+  namespace Express {
+    interface Request {
+      user?: User;
+    }
+  }
+}
+
+app.get('/mypage', isLogin, (req, res) => {
+  res.status(200).success({
+    message: `인증 성공! ${req.user?.name}님의 마이페이지입니다.`,
+    user: req.user,
+  });
+});
+
+app.get("/oauth2/login/google", 
+  passport.authenticate("google", { 
+    session: false 
+  })
+);
+app.get(
+  "/oauth2/callback/google",
+  passport.authenticate("google", {
+	  session: false,
+    failureRedirect: "/login-failed",
+  }),
+  (req, res) => {
+    const tokens = req.user; 
+
+    res.status(200).json({
+      resultType: "SUCCESS",
+      error: null,
+      success: {
+          message: "Google 로그인 성공!",
+          tokens: tokens, // { "accessToken": "...", "refreshToken": "..." }
+      }
+    });
+  }
 );
 
 app.get("/openapi.json", async (req, res, next) => {
@@ -104,26 +156,27 @@ app.get("/", (req, res) => {
 
 app.get("/api/v1/stores/:storeId/reviews", handleListStoreReviews); //특정 가게 리뷰 목록 엔드포인트
 
-app.get("/api/v1/reviews/:userId", handleListMyReviews); //내가 작성한 리뷰 목록 엔드포인트
+app.get("/api/v1/reviews/:userId", isLogin, handleListMyReviews); //내가 작성한 리뷰 목록 엔드포인트
 
 app.get(
   "/api/v1/restaurant/:restaurantId/missions",
   handleListRestaurantMissions
 ); //특정 가게 미션 목록 엔드포인트
 
-app.get("/api/v1/missions/:userId", handleListMyMissions); //내가 진행 중인 미션 목록 엔드포인트
+app.get("/api/v1/missions/:userId", isLogin, handleListMyMissions); //내가 진행 중인 미션 목록 엔드포인트
 
 app.post("/api/v1/users/signup", handleUserSignUp); //회원가입 엔드포인트
 
-app.post("/api/v1/restaurants/add", handleRestaurantAdd); //음식점 추가 엔드포인트
+app.post("/api/v1/restaurants/add", isLogin, handleRestaurantAdd); //음식점 추가 엔드포인트
 
-app.post("/api/v1/:restaurantId/review", upload.none(), handleReviewAdd); //리뷰 작성 엔드포인트
+app.post("/api/v1/:restaurantId/review", isLogin, upload.none(), handleReviewAdd); //리뷰 작성 엔드포인트
 
-app.post("/api/v1/missions/:restaurantId/add", handleMissionAdd); //미션 추가 엔드포인트
+app.post("/api/v1/missions/:restaurantId/add", isLogin, handleMissionAdd); //미션 추가 엔드포인트
 
-app.post("/api/v1/user-missions/:missionId/add", handleUserMissionAdd); //유저미션 추가 엔드포인트
+app.post("/api/v1/user-missions/:missionId/add", isLogin, handleUserMissionAdd); //유저미션 추가 엔드포인트
+app.post("/api/v1/user-missions/complete", isLogin, handleUserMissionComplete); //미션 진행완료
 
-app.post("/api/v1/user-missions/complete", handleUserMissionComplete); //미션 진행완료
+app.patch("/api/v1/users/:userId", isLogin, updateUserInfo); //사용자 정보 수정 엔드포인트
 
 /**
  * 전역 오류를 처리하기 위한 미들웨어

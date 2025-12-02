@@ -1,7 +1,7 @@
 import { responseFromUser, } from "../dtos/user.dto.js";
 import { responseFromReviews, responseFromMissions, } from "../dtos/restaurant.dto.js";
-import { DuplicateUserEmailError, } from "../errors.js";
-import { addUser, getUser, getUserPreferencesByUserId, setPreference, } from "../repositories/user.repository.js";
+import { DuplicateUserEmailError, UserUpdateFailedError, } from "../errors.js";
+import { addUser, getUser, getUserPreferencesByUserId, setPreference, updateUserInfo } from "../repositories/user.repository.js";
 import { getUserMissions } from "../repositories/userMission.repository.js";
 import { getMyReviews } from "../repositories/review.repository.js";
 import bcrypt from "bcrypt";
@@ -37,4 +37,19 @@ export const listMyReviews = async (userId) => {
 export const listMyMissions = async (userId) => {
     const missions = await getUserMissions(userId);
     return responseFromMissions(missions);
+};
+export const updateUserInfoService = async (userInfo, userId) => {
+    const user = await getUser(userId);
+    if (!user) {
+        throw new Error("User not found");
+    }
+    const saltRounds = 10;
+    const hashedPassword = await bcrypt.hash(userInfo.password, saltRounds);
+    userInfo.password = hashedPassword;
+    user.password = user.password;
+    const updatedUserId = await updateUserInfo(userInfo, userId);
+    if (updatedUserId === null) {
+        throw new UserUpdateFailedError("업데이트에 실패했습니다.", userInfo);
+    }
+    return updatedUserId;
 };
