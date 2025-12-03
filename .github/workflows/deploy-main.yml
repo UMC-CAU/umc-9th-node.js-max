@@ -49,6 +49,7 @@ jobs:
       - name: Install dependencies
         run: |
           ssh umc9thworkbook 'npm install --prefix /opt/app/'
+          ssh umc9thworkbook 'cd /opt/app; npx prisma generate'
 
       - name: Apply prisma migrations
         if: steps.paths-filter.outputs.prisma == 'true'
