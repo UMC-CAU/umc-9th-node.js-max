@@ -31,7 +31,7 @@ import swaggerUiExpress from "swagger-ui-express";
 
 import passport from "passport";
 import { googleStrategy, jwtStrategy } from "./auth.config.js";
-import { User } from "./generated/prisma/wasm.js";
+import { User } from "@prisma/client";
 
 dotenv.config();
 
