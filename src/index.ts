@@ -43,6 +43,9 @@ const upload = multer({ dest: "uploads/" }); //이미지 업로드를 위한 mul
 const app = express();
 const port = process.env.PORT;
 
+// 프록시 신뢰 설정 (Nginx 등 리버스 프록시 사용 시 필수)
+app.set('trust proxy', 1);
+
 /**
  * 공통 응답을 사용할 수 있는 헬퍼 함수 등록
  */
